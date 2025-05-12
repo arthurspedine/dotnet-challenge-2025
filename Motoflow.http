@@ -1,0 +1,6 @@
+@Motoflow_HostAddress = http://localhost:5186
+
+GET {{Motoflow_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

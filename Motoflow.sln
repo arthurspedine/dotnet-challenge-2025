@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Motoflow", "Motoflow.csproj", "{F9B3CA67-826E-6E46-1430-025F0F014524}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9B3CA67-826E-6E46-1430-025F0F014524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9B3CA67-826E-6E46-1430-025F0F014524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9B3CA67-826E-6E46-1430-025F0F014524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9B3CA67-826E-6E46-1430-025F0F014524}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3EB17A69-5242-4F74-86E0-16128CB78CB7}
+	EndGlobalSection
+EndGlobal
