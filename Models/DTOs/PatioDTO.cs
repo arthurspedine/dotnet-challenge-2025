@@ -1,25 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Motoflow.Models
+namespace Motoflow.Models.DTOs
 {
-    public class Patio
+    public class PatioDTO
     {
-        [Key]
         public long Id { get; set; }
-        
+
         [Required]
         [StringLength(150)]
         public string Nome { get; set; }
-        
+
         [Required]
         public string Localizacao { get; set; }
-        
-        // Áreas deste pátio
-        public virtual ICollection<Area> Areas { get; set; } = new List<Area>();
 
-        public Patio(string nome, string localizacao) {
+        public PatioDTO(long id, string nome, string localizacao) {
+            Id = id;
             Nome = nome;
             Localizacao = localizacao;
         }
-    } 
+    }
 }

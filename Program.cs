@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<OracleDbContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
+builder.Services.AddScoped<PatioService>();
+builder.Services.AddScoped<PatioRepository>();
 builder.Services.AddScoped<AreaService>();
 builder.Services.AddScoped<AreaRepository>();
 

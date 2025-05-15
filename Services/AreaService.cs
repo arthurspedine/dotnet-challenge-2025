@@ -16,5 +16,25 @@ namespace Motoflow.Services
         {
             return await _areaRepository.GetAllAsync();
         }
+
+        public async Task<Area> GetAreaByIdAsync(long id)
+        {
+            return await _areaRepository.GetByIdAsync(id);
+        }
+
+        public async Task AddAreaAsync(Area area)
+        {
+            await _areaRepository.AddAsync(area);
+        }
+
+        public async Task UpdateAreaAsync(Area area)
+        {
+            await _areaRepository.UpdateAsync(area);
+        }
+
+        public async Task DeleteAreaAsync(long id)
+        {
+            await _areaRepository.DeleteAsync(id);
+        }
     }
 }
