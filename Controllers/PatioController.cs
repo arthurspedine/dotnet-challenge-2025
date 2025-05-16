@@ -20,12 +20,7 @@ namespace Motoflow.Controllers
         public async Task<ActionResult<IEnumerable<PatioDTO>>> Get()
         {
             var patios = await _patioService.GetAllPatiosAsync();
-            var patiosDTO = patios.Select(patio => 
-                new PatioDTO(
-                    patio.Id, 
-                    patio.Nome, 
-                    patio.Localizacao
-                )).ToList();
+            var patiosDTO = patios.Select(PatioDTO.FromPatio).ToList();
             return Ok(patiosDTO);
         }
 
@@ -37,7 +32,7 @@ namespace Motoflow.Controllers
             {
                 return NotFound();
             }
-            return Ok(new PatioDTO(patio.Id, patio.Nome, patio.Localizacao));
+            return Ok(PatioDTO.FromPatio(patio));
         }
 
         [HttpPost]
@@ -50,13 +45,7 @@ namespace Motoflow.Controllers
 
             Patio patio = await _patioService.AddPatioAsync(dto);
 
-            var createdPatioDto = new PatioDTO(
-                patio.Id,
-                patio.Nome,
-                patio.Localizacao
-            );
-
-            return CreatedAtAction(nameof(GetById), new { id = patio.Id }, createdPatioDto);
+            return CreatedAtAction(nameof(GetById), new { id = patio.Id }, PatioDTO.FromPatio(patio));
         }
 
         [HttpPut("{id}")]
@@ -67,14 +56,15 @@ namespace Motoflow.Controllers
                 return BadRequest();
             }
 
-            try {
-                await _patioService.UpdatePatioAsync(id, dto);
-            } 
-            catch (KeyNotFoundException) 
+            try
             {
-                return NotFound(); 
+                await _patioService.UpdatePatioAsync(id, dto);
             }
-            catch (Exception) 
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
             {
                 return StatusCode(500, "Um erro ocorreu ao criar um patio.");
             }

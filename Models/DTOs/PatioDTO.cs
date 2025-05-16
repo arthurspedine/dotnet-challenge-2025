@@ -13,10 +13,16 @@ namespace Motoflow.Models.DTOs
         [Required]
         public string Localizacao { get; set; }
 
-        public PatioDTO(long id, string nome, string localizacao) {
+        public PatioDTO(long id, string nome, string localizacao)
+        {
             Id = id;
             Nome = nome;
             Localizacao = localizacao;
+        }
+
+        public static PatioDTO FromPatio(Patio patio)
+        {
+            return new PatioDTO(patio.Id, patio.Nome, patio.Localizacao);
         }
     }
 }
