@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Motoflow.Models;
 using Motoflow.Services;
+using Motoflow.Models.DTOs.Motoflow.Dtos;
 
 namespace Motoflow.Controllers
 {
@@ -8,22 +8,22 @@ namespace Motoflow.Controllers
     [ApiController]
     public class AreaController : ControllerBase
     {
-
         private readonly AreaService _areaService;
-        
+
         public AreaController(AreaService areaService)
         {
             _areaService = areaService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Area>>> Get()
+        public async Task<ActionResult<IEnumerable<AreaDTO>>> Get()
         {
-            return Ok(await _areaService.GetAllAreasAsync());
+            var areas = await _areaService.GetAllAreasAsync();
+            return Ok(areas);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Area>> GetById(long id)
+        public async Task<ActionResult<AreaDTO>> GetById(long id)
         {
             var area = await _areaService.GetAreaByIdAsync(id);
             if (area == null)
@@ -34,22 +34,22 @@ namespace Motoflow.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Area>> Post(Area area)
+        public async Task<ActionResult<AreaDTO>> Post(AreaDTO areaDto)
         {
-            if (area == null)
+            if (areaDto == null)
             {
                 return BadRequest();
             }
 
-            await _areaService.AddAreaAsync(area);
+            await _areaService.AddAreaAsync(areaDto);
 
-            return CreatedAtAction(nameof(GetById), new { id = area.Id }, area);
+            return CreatedAtAction(nameof(GetById), new { id = areaDto.Id }, areaDto);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(long id, Area area)
+        public async Task<IActionResult> Put(long id, AreaDTO areaDto)
         {
-            if (area == null || id != area.Id)
+            if (areaDto == null || id != areaDto.Id)
             {
                 return BadRequest();
             }
@@ -60,7 +60,7 @@ namespace Motoflow.Controllers
                 return NotFound();
             }
 
-            await _areaService.UpdateAreaAsync(area);
+            await _areaService.UpdateAreaAsync(areaDto);
 
             return NoContent();
         }
