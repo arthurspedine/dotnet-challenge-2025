@@ -1,6 +1,7 @@
 using Motoflow.Models;
 using Motoflow.Repositories;
 using Motoflow.Models.DTOs.Motoflow.Dtos;
+using Motoflow.Models.DTOs;
 
 namespace Motoflow.Services
 {
@@ -13,61 +14,36 @@ namespace Motoflow.Services
             _areaRepository = repository;
         }
 
-        public async Task<IEnumerable<AreaDTO>> GetAllAreasAsync()
+        public async Task<IEnumerable<Area>> GetAllAreasAsync()
         {
-            var areas = await _areaRepository.GetAllAsync();
-            return areas.Select(a => MapToDto(a));
+            return await _areaRepository.GetAllAsync();
         }
 
-        public async Task<AreaDTO?> GetAreaByIdAsync(long id)
+        public async Task<Area> GetAreaByIdAsync(long id)
         {
-            var area = await _areaRepository.GetByIdAsync(id);
-            return area == null ? null : MapToDto(area);
+            return await _areaRepository.GetByIdAsync(id);
+            
         }
 
-        public async Task AddAreaAsync(AreaDTO dto)
+        public async Task<Area> AddAreaAsync(RequestAreaDTO dto)
         {
-            var area = MapToEntity(dto);
+            Area area = new(dto.Identificador, dto.PatioId, dto.CapacidadeMaxima);
             await _areaRepository.AddAsync(area);
+            return area;
         }
 
-        public async Task UpdateAreaAsync(AreaDTO dto)
+        public async Task UpdateAreaAsync(long id, RequestAreaDTO dto)
         {
-            var area = MapToEntity(dto);
+            var area = await GetAreaByIdAsync(id) ?? throw new KeyNotFoundException();
+            area.Identificador = dto.Identificador;
+            area.PatioId = dto.PatioId;
+            area.CapacidadeMaxima = dto.CapacidadeMaxima;
             await _areaRepository.UpdateAsync(area);
         }
 
         public async Task DeleteAreaAsync(long id)
         {
             await _areaRepository.DeleteAsync(id);
-        }
-
-        // Map Entity to DTO
-        private AreaDTO MapToDto(Area area)
-        {
-            return new AreaDTO
-            {
-                Id = area.Id,
-                Identificador = area.Identificador,
-                PatioId = area.PatioId,
-                CapacidadeMaxima = area.CapacidadeMaxima,
-                VagasDisponiveis = area.VagasDisponiveis,
-                MotosIds = area.Motos.Select(m => m.Id).ToList()
-            };
-        }
-
-        // Map DTO to Entity
-        private Area MapToEntity(AreaDTO dto)
-        {
-            return new Area
-            {
-                Id = dto.Id,
-                Identificador = dto.Identificador,
-                PatioId = dto.PatioId,
-                CapacidadeMaxima = dto.CapacidadeMaxima,
-                
-
-            };
         }
     }
 }

@@ -27,5 +27,12 @@ namespace Motoflow.Models
         
         [NotMapped]
         public int VagasDisponiveis => CapacidadeMaxima - Motos.Count();
+
+        public Area(string identificador, long patioId, int capacidadeMaxima)
+        {
+            Identificador = identificador;
+            PatioId = patioId;
+            CapacidadeMaxima = capacidadeMaxima;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Motoflow.Services;
 using Motoflow.Models.DTOs.Motoflow.Dtos;
+using Motoflow.Models;
 
 namespace Motoflow.Controllers
 {
@@ -19,7 +20,9 @@ namespace Motoflow.Controllers
         public async Task<ActionResult<IEnumerable<AreaDTO>>> Get()
         {
             var areas = await _areaService.GetAllAreasAsync();
-            return Ok(areas);
+            Console.WriteLine(areas);
+            var areasDTO = areas.Select(AreaDTO.FromArea).ToList();
+            return Ok(areasDTO);
         }
 
         [HttpGet("{id}")]
@@ -30,39 +33,44 @@ namespace Motoflow.Controllers
             {
                 return NotFound();
             }
-            return Ok(area);
+            return Ok(AreaDTO.FromArea(area));
         }
 
         [HttpPost]
-        public async Task<ActionResult<AreaDTO>> Post(AreaDTO areaDto)
+        public async Task<ActionResult<AreaDTO>> Post(RequestAreaDTO dto)
         {
-            if (areaDto == null)
+            if (dto == null)
             {
                 return BadRequest();
             }
 
-            await _areaService.AddAreaAsync(areaDto);
+            Area area = await _areaService.AddAreaAsync(dto);
 
-            return CreatedAtAction(nameof(GetById), new { id = areaDto.Id }, areaDto);
+            return CreatedAtAction(nameof(GetById), new { id = area.Id }, AreaDTO.FromArea(area));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(long id, AreaDTO areaDto)
+        public async Task<IActionResult> Put(long id, RequestAreaDTO dto)
         {
-            if (areaDto == null || id != areaDto.Id)
+            if (dto == null)
             {
                 return BadRequest();
             }
 
-            var existingArea = await _areaService.GetAreaByIdAsync(id);
-            if (existingArea == null)
+            try
+            {
+                await _areaService.UpdateAreaAsync(id, dto);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            await _areaService.UpdateAreaAsync(areaDto);
-
+            catch (Exception)
+            {
+                return StatusCode(500, "Um erro ocorreu ao criar um patio.");
+            }
             return NoContent();
+
         }
 
         [HttpDelete("{id}")]

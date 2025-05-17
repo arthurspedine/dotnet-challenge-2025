@@ -15,12 +15,16 @@ namespace Motoflow.Repositories
 
         public async Task<IEnumerable<Area>> GetAllAsync()
         {
-            return await _context.Areas.ToListAsync();
+            return await _context.Areas
+                .Include(a => a.Patio)
+                .ToListAsync();
         }
 
-        public async Task<Area> GetByIdAsync(long id)
+        public async Task<Area?> GetByIdAsync(long id)
         {
-            return await _context.Areas.FirstOrDefaultAsync(a => a.Id == id);
+            return await _context.Areas
+                .Include(a => a.Patio)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task AddAsync(Area area)
