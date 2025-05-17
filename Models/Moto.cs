@@ -23,5 +23,15 @@ namespace Motoflow.Models
         
         [NotMapped]
         public HistoricoMoto? VinculoAtual => Historicos.FirstOrDefault(h => h.Ativo);
+
+        public Moto(MotoType type, string? placa = null, string? chassi = null, string? qrCode = null)
+        {
+            Type = type;
+            Placa = placa;
+            Chassi = chassi;
+            QRCode = qrCode;
+        }
+
+        public Moto() { }
     }
 }

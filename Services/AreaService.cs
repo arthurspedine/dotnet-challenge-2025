@@ -19,7 +19,7 @@ namespace Motoflow.Services
             return await _areaRepository.GetAllAsync();
         }
 
-        public async Task<Area> GetAreaByIdAsync(long id)
+        public async Task<Area?> GetAreaByIdAsync(long id)
         {
             return await _areaRepository.GetByIdAsync(id);
             

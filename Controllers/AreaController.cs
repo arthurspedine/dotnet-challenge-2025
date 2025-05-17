@@ -67,7 +67,7 @@ namespace Motoflow.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "Um erro ocorreu ao criar um patio.");
+                return StatusCode(500, "Um erro ocorreu ao criar a area.");
             }
             return NoContent();
 

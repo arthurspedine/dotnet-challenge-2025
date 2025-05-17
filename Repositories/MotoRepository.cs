@@ -13,16 +13,37 @@ namespace Motoflow.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Moto>> GetAllAsync()
+        public async Task<Moto?> GetByPlacaChassiQRCodeAsync(string? placa, string? chassi, string? qrCode)
         {
-            return await _context.Motos.ToListAsync();
-        }
+            // Verificar se pelo menos um dos parâmetros não é nulo
+            if (string.IsNullOrEmpty(placa) && string.IsNullOrEmpty(chassi) && string.IsNullOrEmpty(qrCode))
+            {
+                return null;
+            }
 
-        public async Task<Moto?> GetByIdAsync(long id)
-        {
-            return await _context.Motos
-                .Include(m => m.Historicos) // Inclui relacionamentos, se necessário
-                .FirstOrDefaultAsync(m => m.Id == id);
+            // Consulta base
+            var query = _context.Motos
+                .Include(m => m.Historicos);
+
+            if (!string.IsNullOrEmpty(placa))
+            {
+                string placaLower = placa.ToLower();
+                return await query.FirstOrDefaultAsync(m => m.Placa != null && m.Placa.ToLower() == placaLower);
+            }
+
+            if (!string.IsNullOrEmpty(chassi))
+            {
+                string chassiLower = chassi.ToLower();
+                return await query.FirstOrDefaultAsync(m => m.Chassi != null && m.Chassi.ToLower() == chassiLower);
+            }
+
+            if (!string.IsNullOrEmpty(qrCode))
+            {
+                string qrCodeLower = qrCode.ToLower();
+                return await query.FirstOrDefaultAsync(m => m.QRCode != null && m.QRCode.ToLower() == qrCodeLower);
+            }
+
+            return null;
         }
 
         public async Task AddAsync(Moto moto)
@@ -31,20 +52,11 @@ namespace Motoflow.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Moto moto)
+        public async Task<Moto?> GetByIdAsync(long id)
         {
-            _context.Motos.Update(moto);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(long id)
-        {
-            var moto = await _context.Motos.FindAsync(id);
-            if (moto != null)
-            {
-                _context.Motos.Remove(moto);
-                await _context.SaveChangesAsync();
-            }
+            return await _context.Motos
+                .Include(m => m.Historicos)
+                .FirstOrDefaultAsync(m => m.Id == id);
         }
     }
 }

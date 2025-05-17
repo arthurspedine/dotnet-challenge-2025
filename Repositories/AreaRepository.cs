@@ -17,6 +17,8 @@ namespace Motoflow.Repositories
         {
             return await _context.Areas
                 .Include(a => a.Patio)
+                .Include(a => a.Historicos)
+                .ThenInclude(h => h.Moto)
                 .ToListAsync();
         }
 
@@ -24,6 +26,7 @@ namespace Motoflow.Repositories
         {
             return await _context.Areas
                 .Include(a => a.Patio)
+                .Include(a => a.Historicos)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 

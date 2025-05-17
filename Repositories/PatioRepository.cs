@@ -18,7 +18,7 @@ namespace Motoflow.Repositories
             return await _context.Patios.Include(p => p.Areas).ToListAsync();
         }
 
-        public async Task<Patio> GetByIdAsync(long id)
+        public async Task<Patio?> GetByIdAsync(long id)
         {
             return await _context.Patios
                 .Include(p => p.Areas)

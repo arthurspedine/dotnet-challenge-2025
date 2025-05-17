@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Motoflow.Data;
 using Motoflow.Repositories;
@@ -11,8 +12,16 @@ builder.Services.AddScoped<PatioService>();
 builder.Services.AddScoped<PatioRepository>();
 builder.Services.AddScoped<AreaService>();
 builder.Services.AddScoped<AreaRepository>();
+builder.Services.AddScoped<HistoricoMotoRepository>();
+builder.Services.AddScoped<HistoricoMotoService>();
+builder.Services.AddScoped<MotoRepository>();
+builder.Services.AddScoped<MotoService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

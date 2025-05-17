@@ -18,7 +18,7 @@ namespace Motoflow.Services
             return await _patioRepository.GetAllAsync();
         }
 
-        public async Task<Patio> GetPatioByIdAsync(long id)
+        public async Task<Patio?> GetPatioByIdAsync(long id)
         {
             return await _patioRepository.GetByIdAsync(id);
         }
