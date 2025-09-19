@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Motoflow.Data;
 using Motoflow.Models;
+using Motoflow.Models.Common;
 
 namespace Motoflow.Repositories
 {
@@ -13,12 +14,28 @@ namespace Motoflow.Repositories
             _context = context;
         }
 
+        public async Task<PagedResult<HistoricoMoto>> GetAllPagedAsync(PaginationQuery pagination)
+        {
+            var query = _context.HistoricoMotos
+                .Include(h => h.Moto)
+                .Include(h => h.Area)
+                .ThenInclude(a => a!.Patio);
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pagination.Page - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<HistoricoMoto>(items, pagination.Page, pagination.PageSize, totalCount);
+        }
+
         public async Task<IEnumerable<HistoricoMoto>> GetAllAsync()
         {
             return await _context.HistoricoMotos
                 .Include(h => h.Moto)
                 .Include(h => h.Area)
-                .ThenInclude(a => a.Patio)
+                .ThenInclude(a => a!.Patio)
                 .ToListAsync();
         }
 
@@ -27,8 +44,25 @@ namespace Motoflow.Repositories
             return await _context.HistoricoMotos
                 .Include(h => h.Moto)
                 .Include(h => h.Area)
-                    .ThenInclude(a => a.Patio)
+                    .ThenInclude(a => a!.Patio)
                 .FirstOrDefaultAsync(h => h.Id == id);
+        }
+
+        public async Task<PagedResult<HistoricoMoto>> GetByMotoIdPagedAsync(long motoId, PaginationQuery pagination)
+        {
+            var query = _context.HistoricoMotos
+                .Include(h => h.Moto)
+                .Include(h => h.Area)
+                    .ThenInclude(a => a!.Patio)
+                .Where(h => h.MotoId == motoId);
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pagination.Page - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<HistoricoMoto>(items, pagination.Page, pagination.PageSize, totalCount);
         }
 
         public async Task<IEnumerable<HistoricoMoto>> GetByMotoIdAsync(long motoId)
@@ -36,9 +70,26 @@ namespace Motoflow.Repositories
             return await _context.HistoricoMotos
                 .Include(h => h.Moto)
                 .Include(h => h.Area)
-                    .ThenInclude(a => a.Patio)
+                    .ThenInclude(a => a!.Patio)
                 .Where(h => h.MotoId == motoId)
                 .ToListAsync();
+        }
+
+        public async Task<PagedResult<HistoricoMoto>> GetByAreaIdPagedAsync(long areaId, PaginationQuery pagination)
+        {
+            var query = _context.HistoricoMotos
+                .Include(h => h.Moto)
+                .Include(h => h.Area)
+                    .ThenInclude(a => a!.Patio)
+                .Where(h => h.AreaId == areaId);
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pagination.Page - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<HistoricoMoto>(items, pagination.Page, pagination.PageSize, totalCount);
         }
 
         public async Task<IEnumerable<HistoricoMoto>> GetByAreaIdAsync(long areaId)
@@ -46,7 +97,7 @@ namespace Motoflow.Repositories
             return await _context.HistoricoMotos
                 .Include(h => h.Moto)
                 .Include(h => h.Area)
-                    .ThenInclude(a => a.Patio)
+                    .ThenInclude(a => a!.Patio)
                 .Where(h => h.AreaId == areaId)
                 .ToListAsync();
         }

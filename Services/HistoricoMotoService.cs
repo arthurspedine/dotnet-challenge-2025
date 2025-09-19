@@ -1,5 +1,6 @@
 using Motoflow.Models;
 using Motoflow.Models.DTOs;
+using Motoflow.Models.Common;
 using Motoflow.Repositories;
 
 namespace Motoflow.Services
@@ -20,6 +21,11 @@ namespace Motoflow.Services
             _areaService = areaService;
         }
 
+        public async Task<PagedResult<HistoricoMoto>> GetAllHistoricosAsync(PaginationQuery pagination)
+        {
+            return await _historicoRepository.GetAllPagedAsync(pagination);
+        }
+
         public async Task<IEnumerable<HistoricoMoto>> GetAllHistoricosAsync()
         {
             return await _historicoRepository.GetAllAsync();
@@ -30,9 +36,19 @@ namespace Motoflow.Services
             return await _historicoRepository.GetByIdAsync(id);
         }
 
+        public async Task<PagedResult<HistoricoMoto>> GetHistoricosByMotoIdAsync(long motoId, PaginationQuery pagination)
+        {
+            return await _historicoRepository.GetByMotoIdPagedAsync(motoId, pagination);
+        }
+
         public async Task<IEnumerable<HistoricoMoto>> GetHistoricosByMotoIdAsync(long motoId)
         {
             return await _historicoRepository.GetByMotoIdAsync(motoId);
+        }
+
+        public async Task<PagedResult<HistoricoMoto>> GetHistoricosByAreaIdAsync(long areaId, PaginationQuery pagination)
+        {
+            return await _historicoRepository.GetByAreaIdPagedAsync(areaId, pagination);
         }
 
         public async Task<IEnumerable<HistoricoMoto>> GetHistoricosByAreaIdAsync(long areaId)
@@ -87,6 +103,19 @@ namespace Motoflow.Services
 
             await _historicoRepository.UpdateAsync(historico);
             return historico;
+        }
+
+        public async Task<bool> DeleteHistoricoAsync(long id)
+        {
+            var historico = await _historicoRepository.GetByIdAsync(id);
+            
+            if (historico == null)
+            {
+                return false;
+            }
+
+            await _historicoRepository.DeleteAsync(id);
+            return true;
         }
     }
 }
