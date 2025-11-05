@@ -25,6 +25,7 @@ builder.Services.AddScoped<HistoricoMotoService>();
 builder.Services.AddScoped<MotoRepository>();
 builder.Services.AddScoped<MotoService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddSingleton<MLPredictionService>();
 
 // JWT Authentication Configuration
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
