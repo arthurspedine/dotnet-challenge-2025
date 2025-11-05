@@ -11,6 +11,7 @@ namespace Motoflow.Data
         public DbSet<Area> Areas { get; set; }
         public DbSet<Patio> Patios { get; set; }
         public DbSet<HistoricoMoto> HistoricoMotos { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

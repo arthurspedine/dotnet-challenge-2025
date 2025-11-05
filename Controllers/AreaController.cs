@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Motoflow.Services;
 using Motoflow.Models.DTOs.Motoflow.Dtos;
 using Motoflow.Models.Common;
@@ -12,6 +13,7 @@ namespace Motoflow.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [Produces("application/json")]
     public class AreaController : ControllerBase
     {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Motoflow.Models;
 using Motoflow.Models.DTOs;
@@ -12,6 +13,7 @@ namespace Motoflow.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [Produces("application/json")]
     public class HistoricoMotoController : ControllerBase
     {
