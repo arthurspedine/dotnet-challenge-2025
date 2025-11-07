@@ -72,6 +72,32 @@ O **Motoflow** é uma API RESTful desenvolvida em .NET 8 que implementa um siste
 - **Entity Framework Core**: ORM para persistência
 - **Oracle Database**: Banco de dados relacional
 - **Swagger/OpenAPI**: Documentação da API
+- **ML.NET**: Machine Learning para previsão de ocupação
+
+## 📁 Estrutura do Projeto
+
+```
+dotnet-challenge-2025/
+├── Motoflow.Web/              # API Web principal
+│   ├── Controllers/           # Controladores da API
+│   ├── Services/              # Lógica de negócio
+│   ├── Repositories/          # Acesso a dados
+│   ├── Models/                # Entidades e DTOs
+│   ├── Data/                  # Contexto do banco de dados
+│   ├── Migrations/            # Migrações do EF Core
+│   ├── Properties/            # Configurações de ambiente
+│   ├── Program.cs             # Ponto de entrada da aplicação
+│   ├── appsettings.json       # Configurações
+│   └── motoflow-ml-model.zip  # Modelo ML treinado
+│
+├── Motoflow.Trainer/          # Projeto de treinamento ML
+│   ├── Program.cs             # Treina o modelo
+│   ├── AreaOccupancyData.cs   # Classes de dados para ML
+│   └── README.md              # Documentação do Trainer
+│
+├── Motoflow.sln               # Solution principal
+└── README.md                  # Este arquivo
+```
 
 ## 📊 Estrutura de Endpoints
 
@@ -162,6 +188,7 @@ POST /api/HistoricoMoto
 - Banco de dados Oracle
 - Git (opcional)
 
+### Passos
 
 1. **Clone o repositório**
 ```bash
@@ -170,14 +197,50 @@ cd dotnet-challenge-2025
 ```
 
 2. **Configure o banco de dados**
+
+Atualize a connection string no arquivo `Motoflow.Web/appsettings.json`:
+
+```json
+{
+  "ConnectionStrings": {
+    "OracleConnection": "User Id=seu_usuario;Password=sua_senha;Data Source=seu_servidor"
+  }
+}
+```
+
+3. **Execute as migrações**
 ```bash
+cd Motoflow.Web
 dotnet ef database update
 ```
 
-3. **Execute a aplicação**
+4. **(Opcional) Retreine o modelo ML**
 ```bash
+cd ../Motoflow.Trainer
 dotnet run
+cd ../Motoflow.Web
 ```
 
-4. **Acesse a documentação**
-- OpenAPI JSON: `http://localhost:5186/swagger/index.html`
+5. **Execute a aplicação**
+```bash
+dotnet run --project Motoflow.Web
+```
+
+6. **Acesse a documentação**
+- Swagger UI: `http://localhost:5186/swagger/index.html`
+- API Base: `http://localhost:5186/api`
+
+## 🤖 Machine Learning
+
+O projeto inclui um sistema de previsão de ocupação de áreas usando ML.NET:
+
+- **Modelo**: FastTree Regression
+- **Features**: Capacidade, motos atuais, média de entradas/saídas, dia da semana
+- **Predição**: Taxa de ocupação esperada (0-100%)
+
+Para retreinar o modelo:
+```bash
+dotnet run --project Motoflow.Trainer
+```
+
+O modelo treinado (`motoflow-ml-model.zip`) já está incluído no projeto Web.
