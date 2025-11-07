@@ -7,9 +7,9 @@ namespace Motoflow.Web.Services
 {
     public class AreaService
     {
-        private readonly AreaRepository _areaRepository;
+        private readonly IAreaRepository _areaRepository;
 
-        public AreaService(AreaRepository repository)
+        public AreaService(IAreaRepository repository)
         {
             _areaRepository = repository;
         }

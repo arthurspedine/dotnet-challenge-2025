@@ -9,18 +9,37 @@ using Motoflow.Web.Data;
 using Motoflow.Web.Repositories;
 using Motoflow.Web.Services;
 
+// Método estático para configuração do banco de dados
+static void ConfigureDatabase(IServiceCollection services, IConfiguration configuration)
+{
+    // Verifica se está em ambiente de testes (variável de ambiente ou configuração)
+    var useInMemoryDatabase = configuration.GetValue<bool>("UseInMemoryDatabase", false);
+    
+    if (useInMemoryDatabase)
+    {
+        // Usa InMemory Database para testes
+        services.AddDbContext<OracleDbContext>(options =>
+            options.UseInMemoryDatabase("MotoflowTestDb"));
+    }
+    else
+    {
+        // Usa Oracle em produção/desenvolvimento
+        services.AddDbContext<OracleDbContext>(options =>
+            options.UseOracle(configuration.GetConnectionString("OracleConnection")));
+    }
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Database Configuration
-builder.Services.AddDbContext<OracleDbContext>(options =>
-    options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
+ConfigureDatabase(builder.Services, builder.Configuration);
 
 // Repository and Service Registration
 builder.Services.AddScoped<PatioService>();
-builder.Services.AddScoped<PatioRepository>();
+builder.Services.AddScoped<IPatioRepository, PatioRepository>();
 builder.Services.AddScoped<AreaService>();
-builder.Services.AddScoped<AreaRepository>();
-builder.Services.AddScoped<HistoricoMotoRepository>();
+builder.Services.AddScoped<IAreaRepository, AreaRepository>();
+builder.Services.AddScoped<IHistoricoMotoRepository, HistoricoMotoRepository>();
 builder.Services.AddScoped<HistoricoMotoService>();
 builder.Services.AddScoped<MotoRepository>();
 builder.Services.AddScoped<MotoService>();
@@ -207,3 +226,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Torna a classe Program acessível para testes
+public partial class Program { }

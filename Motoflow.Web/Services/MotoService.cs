@@ -17,8 +17,7 @@ namespace Motoflow.Web.Services
         {
             Moto? moto = await GetMotoByPlacaChassiQRCodeAsync(dto.Placa, dto.Chassi, dto.QRCode);
             if (moto == null) {
-                var motoType = Enum.Parse<MotoType>(dto.Type, ignoreCase: true);
-                moto = new(motoType, dto.Placa, dto.Chassi, dto.QRCode);
+                moto = new(dto.Type, dto.Placa, dto.Chassi, dto.QRCode);
                 await _motoRepository.AddAsync(moto);
             }
             var result = await GetMotoByIdAsync(moto.Id);

@@ -5,7 +5,7 @@ using Motoflow.Web.Models.Common;
 
 namespace Motoflow.Web.Repositories
 {
-    public class HistoricoMotoRepository
+    public class HistoricoMotoRepository : IHistoricoMotoRepository
     {
         private readonly OracleDbContext _context;
 

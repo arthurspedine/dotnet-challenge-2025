@@ -4,7 +4,7 @@ using Motoflow.Web.Models;
 
 namespace Motoflow.Web.Repositories
 {
-    public class PatioRepository
+    public class PatioRepository : IPatioRepository
     {
         private readonly OracleDbContext _context;
 

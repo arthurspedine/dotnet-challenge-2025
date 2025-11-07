@@ -25,27 +25,13 @@ namespace Motoflow.Web.Models.DTOs
 
     public class CreateMotoDTO
     {
-
-        private MotoType _type;
-
         [Required]
-        public string Type
-        {
-            get => _type.ToString();
-            set
-            {
-                if (Enum.TryParse<MotoType>(value, true, out MotoType result))
-                {
-                    _type = result;
-                }
-                else
-                {
-                    throw new ArgumentException($"Tipo de moto inválido. Valores aceitos: {string.Join(", ", Enum.GetNames(typeof(MotoType)))}");
-                }
-            }
-        }
+        public MotoType Type { get; set; }
+        
         public string? Placa { get; set; }
         public string? Chassi { get; set; }
         public string? QRCode { get; set; }
+        
+        public MotoType GetMotoType() => Type;
     }
 }

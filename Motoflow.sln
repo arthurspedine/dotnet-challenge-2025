@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Motoflow.Trainer", "Motoflo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Motoflow.Web", "Motoflow.Web\Motoflow.Web.csproj", "{311D0009-EC8B-4A21-B341-0A75D81D41B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Motoflow.Tests", "Motoflow.Tests\Motoflow.Tests.csproj", "{A7D04198-9258-44BF-BE0D-26A459E83853}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{311D0009-EC8B-4A21-B341-0A75D81D41B1}.Release|x64.Build.0 = Release|Any CPU
 		{311D0009-EC8B-4A21-B341-0A75D81D41B1}.Release|x86.ActiveCfg = Release|Any CPU
 		{311D0009-EC8B-4A21-B341-0A75D81D41B1}.Release|x86.Build.0 = Release|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Debug|x64.Build.0 = Debug|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Debug|x86.Build.0 = Debug|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Release|x64.ActiveCfg = Release|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Release|x64.Build.0 = Release|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Release|x86.ActiveCfg = Release|Any CPU
+		{A7D04198-9258-44BF-BE0D-26A459E83853}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

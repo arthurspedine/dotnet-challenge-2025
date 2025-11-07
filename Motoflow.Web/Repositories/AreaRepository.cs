@@ -4,7 +4,7 @@ using Motoflow.Web.Models;
 
 namespace Motoflow.Web.Repositories
 {
-    public class AreaRepository
+    public class AreaRepository : IAreaRepository
     {
         private readonly OracleDbContext _context;
 

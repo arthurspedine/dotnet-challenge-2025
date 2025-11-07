@@ -7,9 +7,9 @@ namespace Motoflow.Web.Services
 {
     public class PatioService
     {
-        private readonly PatioRepository _patioRepository;
+        private readonly IPatioRepository _patioRepository;
 
-        public PatioService(PatioRepository repository)
+        public PatioService(IPatioRepository repository)
         {
             _patioRepository = repository;
         }

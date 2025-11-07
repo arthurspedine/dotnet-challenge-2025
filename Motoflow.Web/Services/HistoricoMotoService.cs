@@ -7,12 +7,12 @@ namespace Motoflow.Web.Services
 {
     public class HistoricoMotoService
     {
-        private readonly HistoricoMotoRepository _historicoRepository;
+        private readonly IHistoricoMotoRepository _historicoRepository;
         private readonly MotoService _motoService;
         private readonly AreaService _areaService;
 
         public HistoricoMotoService(
-            HistoricoMotoRepository historicoRepository, 
+            IHistoricoMotoRepository historicoRepository, 
             MotoService motoService,
             AreaService areaService)
         {
