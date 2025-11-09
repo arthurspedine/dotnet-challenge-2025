@@ -9,7 +9,8 @@ namespace Motoflow.Web.Controllers
     /// <summary>
     /// Controller para autenticação e gerenciamento de usuários
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     [ApiController]
     [Produces("application/json")]
     public class AuthController : ControllerBase

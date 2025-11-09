@@ -10,6 +10,7 @@ namespace Motoflow.Web.Repositories
         Task<HistoricoMoto?> GetByIdAsync(long id);
         Task<PagedResult<HistoricoMoto>> GetByMotoIdPagedAsync(long motoId, PaginationQuery pagination);
         Task<IEnumerable<HistoricoMoto>> GetByMotoIdAsync(long motoId);
+        Task<PagedResult<HistoricoMoto>> GetByMotoIdentifierPagedAsync(string identifier, PaginationQuery pagination);
         Task<PagedResult<HistoricoMoto>> GetByAreaIdPagedAsync(long areaId, PaginationQuery pagination);
         Task<IEnumerable<HistoricoMoto>> GetByAreaIdAsync(long areaId);
         Task<HistoricoMoto?> GetActiveByMotoIdAsync(long motoId);

@@ -12,7 +12,47 @@
 
 ## 📋 Descrição do Projeto
 
-O **Motoflow** é uma API RESTful desenvolvida em .NET 8 que implementa um sistema de gestão de motos em pátios. A API segue as melhores práticas REST e inclui recursos avançados como paginação, HATEOAS e documentação OpenAPI completa.
+O **Motoflow** é uma API RESTful desenvolvida em .NET 8 que implementa um sistema de gestão de motos em pátios. A API segue as melhores práticas REST e inclui recursos avançados como **versionamento de API**, **paginação**, **HATEOAS** e **documentação OpenAPI completa**.
+
+## ✨ Recursos Principais
+
+### ✅ Versionamento de API
+- **Versão 1.0**: Endpoints básicos com funcionalidades essenciais
+- **Versão 2.0**: Busca flexível de motos (ID, Placa, Chassi, QR Code)
+- **Retrocompatibilidade**: Versões anteriores continuam funcionais
+- **Documentação Separada**: Cada versão tem sua própria documentação Swagger
+
+### ✅ CRUD Completo
+- **Pátios**: Create, Read, Update, Delete
+- **Áreas**: Create, Read, Update, Delete  
+- **Histórico de Motos**: Create, Read, Update, Delete
+
+### ✅ Boas Práticas REST
+- **Status Codes HTTP** apropriados (200, 201, 204, 400, 404, 500)
+- **Verbos HTTP** semânticos (GET, POST, PUT, DELETE)
+- **Estrutura de URLs** padronizada com versionamento
+
+### ✅ Paginação
+- Parâmetros `page` e `pageSize` em endpoints de listagem
+- Resposta estruturada com metadados de paginação
+- Links de navegação (first, last, prev, next)
+
+### ✅ HATEOAS (Hypermedia as the Engine of Application State)
+- Links relacionados em cada recurso
+- Navegação entre recursos relacionados
+- Links de ações disponíveis (self, edit, delete, collection)
+
+### ✅ Documentação OpenAPI/Swagger
+- Documentação separada por versão
+- Descrição detalhada de endpoints
+- Exemplos de payloads de request/response
+- Modelos de dados documentados
+- Códigos de resposta explicados
+
+### ✅ Machine Learning
+- Previsão de ocupação de áreas usando ML.NET
+- Modelo treinado em projeto separado
+- Endpoint dedicado para predições
 
 ## 🏗️ Arquitetura do Domínio
 
@@ -45,6 +85,64 @@ O **Motoflow** é uma API RESTful desenvolvida em .NET 8 que implementa um siste
 - **Oracle Database**: Banco de dados relacional
 - **Swagger/OpenAPI**: Documentação da API
 - **ML.NET**: Machine Learning para previsão de ocupação
+- **API Versioning**: Versionamento de endpoints
+
+## 🔄 Versionamento da API
+
+A API utiliza **versionamento por URL** para garantir retrocompatibilidade e evolução controlada:
+
+### 📌 Versões Disponíveis
+
+#### **Versão 1.0** (Atual)
+Versão inicial com funcionalidades básicas.
+
+**Endpoints:**
+- `GET /api/v1/HistoricoMoto/moto/{motoId}` - Busca históricos **apenas por ID numérico**
+
+#### **Versão 2.0**
+Versão aprimorada com busca flexível de motos.
+
+**Novidades:**
+- `GET /api/v2/HistoricoMoto/moto/{moto}` - Busca históricos por:
+  - **ID numérico** (ex: `123`)
+  - **Placa** (ex: `ABC1234`)
+  - **Chassi** (ex: `9BWZZZ377VT004251`)
+  - **QR Code** (ex: `QR123456789`)
+
+### 🎯 Exemplos de Uso
+
+**Versão 1.0 - Apenas ID:**
+```bash
+GET /api/v1/HistoricoMoto/moto/123
+```
+
+**Versão 2.0 - Busca Flexível:**
+```bash
+# Por ID
+GET /api/v2/HistoricoMoto/moto/123
+
+# Por Placa
+GET /api/v2/HistoricoMoto/moto/ABC1234
+
+# Por Chassi
+GET /api/v2/HistoricoMoto/moto/9BWZZZ377VT004251
+
+# Por QR Code
+GET /api/v2/HistoricoMoto/moto/QR123456789
+```
+
+### 📚 Documentação Swagger
+
+Cada versão possui sua própria documentação no Swagger:
+- **v1.0**: http://localhost:5186/swagger/index.html (selecione "Motoflow API - v1")
+- **v2.0**: http://localhost:5186/swagger/index.html (selecione "Motoflow API - v2")
+
+### 🔧 Implementação Técnica
+
+- **Padrão**: URL Segment Versioning (`/api/v{version}/...`)
+- **Biblioteca**: `Microsoft.AspNetCore.Mvc.Versioning`
+- **Estratégia**: Versionamento explícito na rota
+- **Compatibilidade**: Versões anteriores permanecem funcionais
 
 ## 📁 Estrutura do Projeto
 
@@ -73,40 +171,55 @@ dotnet-challenge-2025/
 
 ## 📊 Estrutura de Endpoints
 
+> **Nota**: Os endpoints abaixo usam o formato sem versionamento para brevidade. Para usar versões específicas, adicione `/v1` ou `/v2` após `/api` (ex: `/api/v1/Patio`).
+
 ### Pátios
 ```
-GET    /api/Patio?page=1&pageSize=10    # Listar pátios (paginado)
-GET    /api/Patio/{id}                  # Obter pátio específico
-POST   /api/Patio                       # Criar pátio
-PUT    /api/Patio/{id}                  # Atualizar pátio
-DELETE /api/Patio/{id}                  # Remover pátio
+GET    /api/v1/Patio?page=1&pageSize=10    # Listar pátios (paginado)
+GET    /api/v1/Patio/{id}                  # Obter pátio específico
+POST   /api/v1/Patio                       # Criar pátio
+PUT    /api/v1/Patio/{id}                  # Atualizar pátio
+DELETE /api/v1/Patio/{id}                  # Remover pátio
 ```
 
 ### Áreas
 ```
-GET    /api/Area?page=1&pageSize=10     # Listar áreas (paginado)
-GET    /api/Area/{id}                   # Obter área específica
-POST   /api/Area                        # Criar área
-PUT    /api/Area/{id}                   # Atualizar área
-DELETE /api/Area/{id}                   # Remover área
+GET    /api/v1/Area?page=1&pageSize=10     # Listar áreas (paginado)
+GET    /api/v1/Area/{id}                   # Obter área específica
+POST   /api/v1/Area                        # Criar área
+PUT    /api/v1/Area/{id}                   # Atualizar área
+DELETE /api/v1/Area/{id}                   # Remover área
 ```
 
 ### Histórico de Motos
+
+#### Versão 1.0
 ```
-GET    /api/HistoricoMoto?page=1&pageSize=10        # Listar históricos (paginado)
-GET    /api/HistoricoMoto/{id}                      # Obter histórico específico
-GET    /api/HistoricoMoto/moto/{motoId}             # Históricos por moto
-GET    /api/HistoricoMoto/area/{areaId}             # Históricos por área
-POST   /api/HistoricoMoto                           # Registrar entrada
-PUT    /api/HistoricoMoto/{id}                      # Registrar saída
-DELETE /api/HistoricoMoto/{id}                      # Remover histórico
+GET    /api/v1/HistoricoMoto?page=1&pageSize=10    # Listar históricos (paginado)
+GET    /api/v1/HistoricoMoto/{id}                  # Obter histórico específico
+GET    /api/v1/HistoricoMoto/moto/{motoId}         # Históricos por moto (apenas ID)
+GET    /api/v1/HistoricoMoto/area/{areaId}         # Históricos por área
+POST   /api/v1/HistoricoMoto                       # Registrar entrada
+PUT    /api/v1/HistoricoMoto/{id}                  # Registrar saída
+DELETE /api/v1/HistoricoMoto/{id}                  # Remover histórico
+```
+
+#### Versão 2.0
+```
+GET    /api/v2/HistoricoMoto?page=1&pageSize=10    # Listar históricos (paginado)
+GET    /api/v2/HistoricoMoto/{id}                  # Obter histórico específico
+GET    /api/v2/HistoricoMoto/moto/{moto}           # Históricos por ID/Placa/Chassi/QR
+GET    /api/v2/HistoricoMoto/area/{areaId}         # Históricos por área
+POST   /api/v2/HistoricoMoto                       # Registrar entrada
+PUT    /api/v2/HistoricoMoto/{id}                  # Registrar saída
+DELETE /api/v2/HistoricoMoto/{id}                  # Remover histórico
 ```
 
 ## 📝 Exemplos de Uso
 
 ### Criar um Pátio
 ```json
-POST /api/Patio
+POST /api/v1/Patio
 {
   "nome": "Pátio Central",
   "localizacao": "Centro da cidade"
@@ -115,7 +228,7 @@ POST /api/Patio
 
 ### Criar uma Área
 ```json
-POST /api/Area
+POST /api/v1/Area
 {
   "identificador": "A1",
   "patioId": 1,
@@ -125,7 +238,7 @@ POST /api/Area
 
 ### Registrar Entrada de Moto
 ```json
-POST /api/HistoricoMoto
+POST /api/v2/HistoricoMoto
 {
   "moto": {
     "type": "Scooter",
@@ -143,11 +256,11 @@ POST /api/HistoricoMoto
   "nome": "Pátio Central",
   "localizacao": "Centro da cidade",
   "links": {
-    "self": "https://api.motoflow.com/api/Patio/1",
-    "edit": "https://api.motoflow.com/api/Patio/1",
-    "delete": "https://api.motoflow.com/api/Patio/1",
-    "collection": "https://api.motoflow.com/api/Patio",
-    "areas": "https://api.motoflow.com/api/Area?patioId=1"
+    "self": "https://api.motoflow.com/api/v1/Patio/1",
+    "edit": "https://api.motoflow.com/api/v1/Patio/1",
+    "delete": "https://api.motoflow.com/api/v1/Patio/1",
+    "collection": "https://api.motoflow.com/api/v1/Patio",
+    "areas": "https://api.motoflow.com/api/v1/Area?patioId=1"
   }
 }
 ```
@@ -200,7 +313,9 @@ dotnet run --project Motoflow.Web
 
 6. **Acesse a documentação**
 - Swagger UI: `http://localhost:5186/swagger/index.html`
-- API Base: `http://localhost:5186/api`
+  - Selecione **"Motoflow API - v1"** ou **"Motoflow API - v2"** no dropdown do Swagger
+- API Base v1.0: `http://localhost:5186/api/v1`
+- API Base v2.0: `http://localhost:5186/api/v2` (recomendada)
 
 ## 🤖 Machine Learning
 
@@ -224,7 +339,7 @@ Isso gera o arquivo `motoflow-ml-model.zip` que é consumido pela API principal.
 ### Endpoint de Predição
 
 ```
-POST /api/MLPrediction
+POST /api/v1/MLPrediction
 {
   "capacidadeMaxima": 50,
   "motosAtuais": 30,
@@ -372,7 +487,7 @@ O projeto implementa autenticação JWT (JSON Web Tokens):
 
 ### Registro de Usuário
 ```json
-POST /api/Auth/register
+POST /api/v1/Auth/register
 {
   "username": "usuario",
   "password": "senha123",
@@ -382,7 +497,7 @@ POST /api/Auth/register
 
 ### Login
 ```json
-POST /api/Auth/login
+POST /api/v1/Auth/login
 {
   "username": "usuario",
   "password": "senha123"

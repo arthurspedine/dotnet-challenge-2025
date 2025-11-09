@@ -65,6 +65,27 @@ namespace Motoflow.Web.Repositories
             return new PagedResult<HistoricoMoto>(items, pagination.Page, pagination.PageSize, totalCount);
         }
 
+        public async Task<PagedResult<HistoricoMoto>> GetByMotoIdentifierPagedAsync(string identifier, PaginationQuery pagination)
+        {
+            var query = _context.HistoricoMotos
+                .Include(h => h.Moto)
+                .Include(h => h.Area)
+                    .ThenInclude(a => a!.Patio)
+                .Where(h => h.Moto != null && (
+                    h.Moto.Placa == identifier ||
+                    h.Moto.Chassi == identifier ||
+                    h.Moto.QRCode == identifier
+                ));
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pagination.Page - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<HistoricoMoto>(items, pagination.Page, pagination.PageSize, totalCount);
+        }
+
         public async Task<IEnumerable<HistoricoMoto>> GetByMotoIdAsync(long motoId)
         {
             return await _context.HistoricoMotos

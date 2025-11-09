@@ -2,6 +2,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -111,9 +113,16 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo 
     { 
-        Title = "Motoflow REST API", 
-        Version = "v1",
+        Title = "Motoflow REST API - v1", 
+        Version = "v1.0",
         Description = @"API RESTful para gestão de motos em pátios utilizando .NET 8.
+
+## Versão 1.0
+
+Esta é a versão inicial da API com funcionalidades básicas.
+
+### Endpoints de Histórico (v1):
+- `GET /api/v1.0/HistoricoMoto/moto/{motoId}` - Busca históricos **apenas por ID numérico** da moto
 
 ## Domínio de Negócio
 
@@ -135,6 +144,54 @@ Para acessar os endpoints protegidos:
 3. Clique no botão **Authorize** (🔒) no topo desta página
 4. Digite: `{seu_token}`
 5. Clique em **Authorize** e feche o modal"
+    });
+
+    c.SwaggerDoc("v2", new OpenApiInfo 
+    { 
+        Title = "Motoflow REST API - v2", 
+        Version = "v2.0",
+        Description = @"API RESTful para gestão de motos em pátios utilizando .NET 8.
+
+## Versão 2.0 - Melhorias
+
+Esta versão adiciona funcionalidades aprimoradas de busca.
+
+### 🆕 Novidades da v2:
+- **Busca Flexível de Motos**: `GET /api/v2/HistoricoMoto/moto/{moto}`
+  - Aceita **ID numérico** (ex: `123`)
+  - Aceita **Placa** (ex: `ABC1234`)
+  - Aceita **Chassi** (ex: `9BWZZZ377VT004251`)
+  - Aceita **QR Code** (ex: `QR123456789`)
+
+### Exemplos de Uso:
+```
+GET /api/v2/HistoricoMoto/moto/123          # Busca por ID
+GET /api/v2/HistoricoMoto/moto/ABC1234      # Busca por Placa
+GET /api/v2/HistoricoMoto/moto/9BWZZZ...    # Busca por Chassi
+GET /api/v2/HistoricoMoto/moto/QR123456789  # Busca por QR Code
+```
+
+## Autenticação
+
+Para acessar os endpoints protegidos:
+1. Registre-se em `/api/v1/auth/register` ou faça login em `/api/v1/auth/login`
+2. Copie o token JWT retornado
+3. Clique no botão **Authorize** (🔒) no topo desta página
+4. Digite: `{seu_token}`
+5. Clique em **Authorize** e feche o modal"
+    });
+
+    // Configuração para separar endpoints por versão no Swagger
+    c.DocInclusionPredicate((version, desc) =>
+    {
+        // Pega a versão da rota
+        if (desc.RelativePath != null && desc.RelativePath.Contains("/v"))
+        {
+            var routeVersion = desc.RelativePath.Split('/')[1]; // ex: "v1" ou "v2"
+            return routeVersion.StartsWith(version.Replace(".", ""));
+        }
+        
+        return version == "v1"; // default para v1
     });
 
     // Include XML comments for better documentation
@@ -179,7 +236,26 @@ Exemplo: Cole apenas '12345abcdef'",
     });
 });
 
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = Microsoft.AspNetCore.Mvc.Versioning.ApiVersionReader.Combine(
+        new Microsoft.AspNetCore.Mvc.Versioning.UrlSegmentApiVersionReader()
+    );
+});
+
+// API Versioning Configuration
+builder.Services.AddVersionedApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";         // v1, v2
+    options.SubstituteApiVersionInUrl = true;
+});
+
 var app = builder.Build();
+
+var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
@@ -187,8 +263,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Motoflow API V1");
-        c.RoutePrefix = string.Empty; // Swagger na raiz
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+            c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"Motoflow API v{description.ApiVersion}");
+            c.RoutePrefix = string.Empty; // Swagger na raiz
+        }
     });
 }
 

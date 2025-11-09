@@ -11,7 +11,8 @@ namespace Motoflow.Web.Controllers
     /// <summary>
     /// Controller para gerenciamento de áreas dentro dos pátios
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     [ApiController]
     [Authorize]
     [Produces("application/json")]

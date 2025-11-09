@@ -41,6 +41,18 @@ namespace Motoflow.Web.Services
             return await _historicoRepository.GetByMotoIdPagedAsync(motoId, pagination);
         }
 
+        public async Task<PagedResult<HistoricoMoto>> GetHistoricosByMotoIdentifierAsync(string identifier, PaginationQuery pagination)
+        {
+            // Tenta buscar por ID numérico primeiro
+            if (long.TryParse(identifier, out long motoId))
+            {
+                return await _historicoRepository.GetByMotoIdPagedAsync(motoId, pagination);
+            }
+            
+            // Caso contrário, busca por placa, chassi ou QR code
+            return await _historicoRepository.GetByMotoIdentifierPagedAsync(identifier, pagination);
+        }
+
         public async Task<IEnumerable<HistoricoMoto>> GetHistoricosByMotoIdAsync(long motoId)
         {
             return await _historicoRepository.GetByMotoIdAsync(motoId);

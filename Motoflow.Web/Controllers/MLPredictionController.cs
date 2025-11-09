@@ -9,7 +9,8 @@ namespace Motoflow.Web.Controllers
     /// <summary>
     /// Controller para previsões usando Machine Learning
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     [ApiController]
     [Authorize]
     [Produces("application/json")]

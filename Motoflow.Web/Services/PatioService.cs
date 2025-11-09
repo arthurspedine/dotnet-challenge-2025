@@ -36,7 +36,7 @@ namespace Motoflow.Web.Services
 
             // Adiciona links de paginação
             var hateoasLinks = new HateoasLinks();
-            hateoasLinks.AddPaginationLinks($"{baseUrl}/api/Patio", result.Page, result.TotalPages, result.PageSize);
+            hateoasLinks.AddPaginationLinks($"{baseUrl}/api/v1/Patio", result.Page, result.TotalPages, result.PageSize);
             result.Links = hateoasLinks.Links;
 
             return result;

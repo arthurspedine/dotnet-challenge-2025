@@ -11,8 +11,10 @@ namespace Motoflow.Web.Controllers
     /// <summary>
     /// Controller para gerenciamento do histórico de motos nas áreas
     /// </summary>
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [Authorize]
     [Produces("application/json")]
     public class HistoricoMotoController : ControllerBase
@@ -47,7 +49,7 @@ namespace Motoflow.Web.Controllers
 
             // Add pagination links
             var hateoasLinks = new HateoasLinks();
-            hateoasLinks.AddPaginationLinks($"{baseUrl}/api/HistoricoMoto", result.Page, result.TotalPages, result.PageSize);
+            hateoasLinks.AddPaginationLinks($"{baseUrl}/api/v2/HistoricoMoto", result.Page, result.TotalPages, result.PageSize);
             result.Links = hateoasLinks.Links;
 
             return Ok(result);
@@ -89,9 +91,9 @@ namespace Motoflow.Web.Controllers
         /// <param name="pagination">Parâmetros de paginação</param>
         /// <returns>Lista paginada de históricos da motocicleta</returns>
         /// <response code="200">Retorna os históricos da motocicleta</response>
-        [HttpGet("moto/{motoId}")]
+        [HttpGet("moto/{motoId}"), MapToApiVersion("1.0")]
         [ProducesResponseType(typeof(PagedResult<HistoricoMotoDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PagedResult<HistoricoMotoDTO>>> GetByMotoId(long motoId, [FromQuery] PaginationQuery pagination)
+        public async Task<ActionResult<PagedResult<HistoricoMotoDTO>>> GetByMotoIdV1(long motoId, [FromQuery] PaginationQuery pagination)
         {
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             var historicos = await _historicoService.GetHistoricosByMotoIdAsync(motoId, pagination);
@@ -105,7 +107,36 @@ namespace Motoflow.Web.Controllers
                 historicos.TotalCount);
 
             var hateoasLinks = new HateoasLinks();
-            hateoasLinks.AddPaginationLinks($"{baseUrl}/api/HistoricoMoto/moto/{motoId}", result.Page, result.TotalPages, result.PageSize);
+            hateoasLinks.AddPaginationLinks($"{baseUrl}/api/v1/HistoricoMoto/moto/{motoId}", result.Page, result.TotalPages, result.PageSize);
+            result.Links = hateoasLinks.Links;
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Obtém históricos por identificador da motocicleta (ID, Placa, Chassi ou QR Code)
+        /// </summary>
+        /// <param name="moto">ID, Placa, Chassi ou QR Code da motocicleta</param>
+        /// <param name="pagination">Parâmetros de paginação</param>
+        /// <returns>Lista paginada de históricos da motocicleta</returns>
+        /// <response code="200">Retorna os históricos da motocicleta</response>
+        [HttpGet("moto/{moto}"), MapToApiVersion("2.0")]
+        [ProducesResponseType(typeof(PagedResult<HistoricoMotoDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PagedResult<HistoricoMotoDTO>>> GetByMotoIdV2(string moto, [FromQuery] PaginationQuery pagination)
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var historicos = await _historicoService.GetHistoricosByMotoIdentifierAsync(moto, pagination);
+            
+            var historicosDTO = historicos.Data.Select(h => HistoricoMotoDTO.FromHistoricoMoto(h, baseUrl)).ToList();
+            
+            var result = new PagedResult<HistoricoMotoDTO>(
+                historicosDTO, 
+                historicos.Page, 
+                historicos.PageSize, 
+                historicos.TotalCount);
+
+            var hateoasLinks = new HateoasLinks();
+            hateoasLinks.AddPaginationLinks($"{baseUrl}/api/v2/HistoricoMoto/moto/{moto}", result.Page, result.TotalPages, result.PageSize);
             result.Links = hateoasLinks.Links;
 
             return Ok(result);
@@ -134,7 +165,7 @@ namespace Motoflow.Web.Controllers
                 historicos.TotalCount);
 
             var hateoasLinks = new HateoasLinks();
-            hateoasLinks.AddPaginationLinks($"{baseUrl}/api/HistoricoMoto/area/{areaId}", result.Page, result.TotalPages, result.PageSize);
+            hateoasLinks.AddPaginationLinks($"{baseUrl}/api/v2/HistoricoMoto/area/{areaId}", result.Page, result.TotalPages, result.PageSize);
             result.Links = hateoasLinks.Links;
 
             return Ok(result);
